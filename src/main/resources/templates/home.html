@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noimageindex, noarchive">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
+    <title>首页</title>
+
+    <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{vendor/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{vendor/css/letter.css}" rel="stylesheet"/>
+
+    <script th:src="@{vendor/css/popper.min.js}"></script>
+    <script th:src="@{vendor/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{vendor/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{vendor/js/home.js}"></script>
+    <style>
+        body{
+            background-color: #ecf0f1;
+        }
+        pre{
+            white-space: pre-wrap; /* css-3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+            font-family: "微软雅黑";
+            font-size:15px;
+        }
+        p{
+            font-family: "微软雅黑";
+            font-size:15px;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse m-auto" id="navbarColor03">
+        <ul class="navbar-nav m-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#"><button class="btn btn-outline-success active">&nbsp;   <span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;<span class="badge badge-light"></span></button></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><button class="btn btn-outline-success">&nbsp;   <span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;<span class="badge badge-light"></span></button></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ><button class="btn btn-outline-success" type="button" id="comment1">&nbsp;   <span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;<span class="badge badge-light" id="send_number"></span></button></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/letter/list.action}"><button class="btn btn-outline-success">&nbsp;   <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;<span class="badge badge-light"></span></button></a>
+            </li>
+        </ul>
+        <form class="form-inline m-auto" >
+            <input class="form-control mr-sm-2" type="text" placeholder="请输入..." id="friend_id">
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#search" onclick="mysearch()">搜索</button>
+        </form>
+
+        <div class="modal fade" id="search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<h5 class="modal-title" id="exampleModalLongTitle">日志</h5>-->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body m-auto">
+                        <div class="m-auto">
+                            <img src="" class="headPicture" id="sspicture"/>
+                        </div>
+
+                        <div class="m-auto text-center"><span class="text-primary text-center" id="ssname"></span></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick = "addfriend()">添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>
+<div class="commentPopup themeColor" id="commentPopup" tabindex='-1'>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4" style="margin-top:7px">
+            <div class="row">
+                <div class="row m-auto bg" style="width:380px;height:110px;background: url('img/background.jpg')">
+                    <img class="headPicture" th:src="${user_picture}"/>
+                </div>
+
+                <div class="container-fluid bordeShadow">
+                    <div class="row" style="margin-top:20px;margin-bottom:20px">
+                        <div class="col-lg-4 m-auto hand" onclick="mylist()">
+                            <div class="row m-auto"><span>日志</span></div>
+                            <span th:text="${dailyCount}" class="text-center"></span>
+                        </div>
+
+                        <div class="col-lg-4 m-auto hand"  onclick="dailyfriend()">
+                            <div class="row m-auto">好友</div>
+                            <span th:text="${friendCount}" class="text-center"></span>
+                        </div>
+                        <div class="col-lg-4 m-auto hand">
+                            <div class="row m-auto">访问记录</div>
+                            <span class="text-center">3</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-8" style="margin-top:7px;">
+
+            <div class="row themeColor hand" style="padding-top:12px;" data-toggle="modal" data-target="#logModal">
+                <div class="col-lg-1">
+                    <img class="smallHeadPicture" th:src="${user_picture}"/>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <div class="row">
+                            <input class="form-control form-control hand" type="text" placeholder="输入内容..." id="inputLarge">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-primary">发日志</button>
+                </div>
+
+            </div>
+
+            <div class="modal fade" id="logModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">日志</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <textarea class="form-control" id="daily_details" rows="25"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <select class="btn" id="privacy" >
+                                <option selected="selected">公共</option>
+                                <option>私密</option>
+                            </select>
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="sendDaily()">发送</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:each="daily,iterStat : ${dailyList}">
+                <div class="message themeColor">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <img class="middleHeadPicture" th:src="${daily.daily_picture}"/>
+                        </div>
+                        <div class="col-lg-11">
+                            <div style="clear:both">
+                                <div style="width:84px;float:left">
+                        	<span class="author" >
+                              <strong th:text="${daily.daily_author}"></strong>
+                          </span>
+                                </div>
+                                <div style="margin-left:610px">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="<%=basePath %>daily/${daily.daily_id}/delete.action" >删除</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:if="${session.USER_SESSION.user_id} == ${daily.user_id}" class="logContext">
+                                <p class="text-primary" contenteditable="plaintext-only" onblur="updateDaily(${daily.daily_id},${USER_SESSION.user_id},${daily.user_id })" id="detail${daily.daily_id}" th:text="${daily.daily_details}"></p>
+                            </div>
+                            <div th:if="${session.USER_SESSION.user_id} != ${daily.user_id}" class="logContext">
+                                <pre class="text-primary" th:text="${daily.daily_details}"></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row text-right">
+                        <div class="col-lg-2">
+                            <button class="btn">
+                                <span class="glyphicon glyphicon-comment" > </span>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <button class="btn">
+                                <span class="glyphicon glyphicon-share-alt"> </span>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <button class="btn">
+                                <span class="glyphicon glyphicon-thumbs-up"> </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row themeColor commentBody" th:id="'bc'+${daily.daily_id}">
+                    <div th:each="comment,iterStat: ${daily.comments}" class="commentDiv">
+                        <span class="user hand">${comment.user_name}&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                        <span class="comment hand">${comment.com_detail}</span>
+                    </div>
+                </div>
+
+                <div class=" input-group mb-3"style="margin-top:5px;">
+                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="请输入想发送的内容..." th:id="'c'+${daily.daily_id}"/>
+                    <div class = "input-group-append">
+                        <button class="btn btn-success" type="button" onclick="sendComment(this.id)" th:id="${daily.daily_id}" >发送</button>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
